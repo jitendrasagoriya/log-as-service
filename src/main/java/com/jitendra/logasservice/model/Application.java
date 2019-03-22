@@ -281,8 +281,8 @@ public class Application implements Serializable{
 	public static void main(String[] args) {
 		try {
 			System.out
-					.println( new ApplicationBuilder("QU5ET0XBTG-PC7968Z6KI1553247020291", "ANDOLAN", "YAO7OV6S8I2D3HL7PXWB3GCAM7D95VIA1553246982106",
-							"ANDOLAN", "ADMIN").buildJson() );
+					.println( new ApplicationBuilder(SecureTokenGenerator.nextAppId("ANDOLA-UI"), "ANDOLA-UI",SecureTokenGenerator.getToken() ,
+							"ANDOLA-UI", "ADMIN").buildJson() );
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

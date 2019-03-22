@@ -10,12 +10,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jitendra.logasservice.enums.Level;
 import com.jitendra.logasservice.model.Application;
 import com.jitendra.logasservice.model.AuditUiLogs;
 import com.jitendra.logasservice.service.impl.ApplicationServiceImpl;
@@ -50,8 +52,18 @@ public class AuditUiLogEndpoint {
 	}
 	
 	@GetMapping()
-	public ResponseEntity<List<AuditUiLogs>> getAll() {
-		return new ResponseEntity<List<AuditUiLogs>>(service.repository().findAll(), HttpStatus.OK);
+	public ResponseEntity<List<AuditUiLogs>> getAll(@RequestHeader("X-AUTH-LOG-HEADER") String token) {
+		Application application = applicationService.getUserByToken(token);
+		
+		return new ResponseEntity<List<AuditUiLogs>>(service.getTodayAuditLog(application.getId()), HttpStatus.OK);
+	}
+	
+	
+	
+	@GetMapping(path ="level/{level}")
+	public ResponseEntity<List<AuditUiLogs>> getByAppId(@RequestHeader("X-AUTH-LOG-HEADER") String token,@PathVariable("level") Level level) {
+		Application application = applicationService.getUserByToken(token);
+		return new ResponseEntity<List<AuditUiLogs>>(service.getTodayAuditLog(application.getId(),level), HttpStatus.OK);
 	}
 
 }
