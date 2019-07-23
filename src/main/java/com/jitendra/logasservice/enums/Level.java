@@ -5,9 +5,9 @@ import java.util.Map;
 
 public enum Level {
 	
-	INFO(1,"STUDENTS","STUDENTS"),
-	DEBUG(2,"GIRLS","GIRLS"),
-	ERROR(3,"WOMEN","WOMEN");
+	INFO(1,"INFO","INFO"),
+	DEBUG(2,"DEBUG","DEBUG"),
+	ERROR(3,"ERROR","ERROR");
 	
 	
 	private static final Map<Integer, Level> byId = new HashMap<Integer, Level>();
@@ -71,6 +71,13 @@ public enum Level {
 	 */
 	public String getValue() {
 		return value;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
 	}
 
 }

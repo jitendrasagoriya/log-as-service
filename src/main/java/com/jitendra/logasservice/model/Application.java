@@ -10,8 +10,6 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jitendra.logasservice.enums.Level;
-import com.jitendra.logasservice.model.AuditUiLogs.AuditUiLogsBuilder;
 import com.jitendra.logasservice.token.SecureTokenGenerator;
 
 
@@ -42,6 +40,12 @@ public class Application implements Serializable{
 	
 	@Column(name = "CREATIONTIME")
 	private Timestamp onBoardTime;
+	
+	@Column(name= "EMAIL")
+	private String email;
+	
+	@Column(name= "PASSWORD")
+	private String password;
 
 	/**
 	 * 
@@ -68,6 +72,31 @@ public class Application implements Serializable{
 		this.description = description;
 		this.access = access;
 		this.onBoardTime = onBoardTime;
+	}
+	
+	
+
+	/**
+	 * @param id
+	 * @param appName
+	 * @param accessToken
+	 * @param description
+	 * @param access
+	 * @param onBoardTime
+	 * @param email
+	 * @param password
+	 */
+	public Application(String id, String appName, String accessToken, String description, String access,
+			Timestamp onBoardTime, String email, String password) {
+		super();
+		this.id = id;
+		this.appName = appName;
+		this.accessToken = accessToken;
+		this.description = description;
+		this.access = access;
+		this.onBoardTime = onBoardTime;
+		this.email = email;
+		this.password = password;
 	}
 
 	/**
@@ -153,6 +182,37 @@ public class Application implements Serializable{
 	public void setOnBoardTime(Timestamp onBoardTime) {
 		this.onBoardTime = onBoardTime;
 	}
+	
+	
+	
+
+	/**
+	 * @return the email
+	 */
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * @param email the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	/**
+	 * @return the password
+	 */
+	public String getPassword() {
+		return password;
+	}
+
+	/**
+	 * @param password the password to set
+	 */
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -234,6 +294,10 @@ public class Application implements Serializable{
 		public ApplicationBuilder() {
 			application = new Application();
 		}
+		
+		public ApplicationBuilder(String id, String appName, String accessToken, String description, String access,String email,String password) {
+			application = new Application(id,appName,accessToken,description,access, new Timestamp(System.currentTimeMillis()),email,password);
+		}
 				
 		public ApplicationBuilder(String id, String appName, String accessToken, String description, String access) {
 			application = new Application(id,appName,accessToken,description,access, new Timestamp(System.currentTimeMillis()));
@@ -268,6 +332,16 @@ public class Application implements Serializable{
 			return this;
 		}
 		
+		public ApplicationBuilder withEmail(String access) {
+			application.setEmail(access);
+			return this;
+		}
+		
+		public ApplicationBuilder withPassword(String access) {
+			application.setPassword(access);
+			return this;
+		}
+		
 		public Application build(){
 			return this.application;
 		}
@@ -282,7 +356,7 @@ public class Application implements Serializable{
 		try {
 			System.out
 					.println( new ApplicationBuilder(SecureTokenGenerator.nextAppId("ANDOLA-UI"), "ANDOLA-UI",SecureTokenGenerator.getToken() ,
-							"ANDOLA-UI", "ADMIN").buildJson() );
+							"ANDOLA-UI", "ADMIN","jitendrasagoriya@yahoo.co.in","123456789").buildJson() );
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -21,4 +21,16 @@ public interface AuditUiLogsService<R> extends BaseSerivce<R> {
 	public List<AuditUiLogs> getTodayAuditLog(String appId, Level level);	 
 	
 	public List<AuditUiLogs> getTodayAuditLog(String appId);
+	
+	public Integer getTodayAuditLogCount(String appId, Level level);
+	
+	public Integer getTodayAuditLogCount(String appId, Level level,Timestamp startDate);
+	
+	public Integer getTodayAuditLogTotalCount(String appId,Timestamp startDate);
+	
+	public Integer getTodayAuditLogCount(String appId, Level level,Timestamp startDate, Timestamp endDate);
+	
+	public Integer getTodayAuditLogTotalCount(String appId, Timestamp startDate, Timestamp endDate);
+	
+	public Integer getTodayAuditLogTodayTotalCount(String appId);
 }

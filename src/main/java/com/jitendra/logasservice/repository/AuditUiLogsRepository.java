@@ -27,6 +27,10 @@ public interface AuditUiLogsRepository extends JpaRepository<AuditUiLogs, Long> 
 	public List<AuditUiLogs> getTodayByAppAndLevel(@Param("appId") String appId, @Param("level") Level level,
 			@Param("startDate") Timestamp startDate, @Param("endDate") Timestamp endDate);
 	
+	@Query("SELECT COUNT(A) FROM AuditUiLogs A WHERE A.appId = :appId AND A.level = :level AND A.logTime between :startDate AND :endDate")
+	public Integer getTodayByAppAndLevelCount(@Param("appId") String appId, @Param("level") Level level,
+			@Param("startDate") Timestamp startDate, @Param("endDate") Timestamp endDate);
+	
 	@Query("SELECT A FROM AuditUiLogs A WHERE A.appId = :appId AND A.logTime between :startDate AND :endDate")
 	public List<AuditUiLogs> getTodayByAppAndLevel(@Param("appId") String appId,
 			@Param("startDate") Timestamp startDate, @Param("endDate") Timestamp endDate);

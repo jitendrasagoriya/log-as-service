@@ -39,8 +39,17 @@ public class AuthenticatorInterceptor extends HandlerInterceptorAdapter {
 
 		/*****************************
 		 * URL NOT CHECK AUTHENTICATION
-		 *************************************/		 
+		 *************************************/		
+		
+		if (request.getMethod().equalsIgnoreCase("OPTIONS")) {
+			return true;
+		}
+
 		if (request.getMethod().equalsIgnoreCase("POST") && request.getRequestURI().contains("api/authentication/")) {
+			return true;
+		}
+		
+		if (request.getMethod().equalsIgnoreCase("GET") && request.getRequestURI().contains("api/authentication/")) {
 			return true;
 		}
 		

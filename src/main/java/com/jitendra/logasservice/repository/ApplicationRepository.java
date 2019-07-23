@@ -12,5 +12,8 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 	
 	@Query("SELECT A FROM Application A WHERE A.accessToken = :accessToken")
 	public Application getActive(@Param("accessToken") String accessToken );
+	
+	@Query("SELECT A FROM Application A WHERE A.email = :email AND password = :password")
+	public Application getApplication(@Param("email") String email,@Param("password") String password );
 
 }
