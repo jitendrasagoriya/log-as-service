@@ -1,6 +1,7 @@
 package com.jitendra.logasservice.model;
 
 import java.io.Serializable;
+import java.sql.Date;
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
@@ -11,29 +12,32 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper; 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jitendra.logasservice.enums.Level;
-import com.jitendra.logasservice.token.SecureTokenGenerator; 
+import com.jitendra.logasservice.token.SecureTokenGenerator;
 
 @Entity
 @Table(name = "AUDITLOG")
-public class AuditUiLogs  implements Serializable {
+public class AuditUiLogs implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "ID")
 	private Long id;
-	
+
 	@Column(name = "LOGTIME")
 	private Timestamp logTime;
-	
+
+	@Column(name = "LOGDATE")
+	private Date logDate;
+
 	@Column(name = "LOG")
 	private String log;
-	
+
 	@Column(name = "LEVEL")
 	private Level level;
-	
+
 	@Column(name = "APPID")
 	private String appId;
 
@@ -56,8 +60,6 @@ public class AuditUiLogs  implements Serializable {
 		this.logTime = logTime;
 		this.log = log;
 	}
-	
-	
 
 	/**
 	 * @param id
@@ -72,7 +74,7 @@ public class AuditUiLogs  implements Serializable {
 		this.log = log;
 		this.level = level;
 	}
-	
+
 	public AuditUiLogs(Long id, Timestamp logTime, String log, Level level, String appId) {
 		super();
 		this.id = id;
@@ -80,6 +82,38 @@ public class AuditUiLogs  implements Serializable {
 		this.log = log;
 		this.level = level;
 		this.appId = appId;
+	}
+
+	/**
+	 * @param id
+	 * @param logTime
+	 * @param logDate
+	 * @param log
+	 * @param level
+	 * @param appId
+	 */
+	public AuditUiLogs(Long id, Timestamp logTime, Date logDate, String log, Level level, String appId) {
+		super();
+		this.id = id;
+		this.logTime = logTime;
+		this.logDate = logDate;
+		this.log = log;
+		this.level = level;
+		this.appId = appId;
+	}
+
+	/**
+	 * @return the logDate
+	 */
+	public Date getLogDate() {
+		return logDate;
+	}
+
+	/**
+	 * @param logDate the logDate to set
+	 */
+	public void setLogDate(Date logDate) {
+		this.logDate = logDate;
 	}
 
 	/**
@@ -124,7 +158,6 @@ public class AuditUiLogs  implements Serializable {
 		this.log = log;
 	}
 
-	
 	/**
 	 * @return the level
 	 */
@@ -153,7 +186,9 @@ public class AuditUiLogs  implements Serializable {
 		this.appId = appId;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -167,7 +202,9 @@ public class AuditUiLogs  implements Serializable {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -199,17 +236,18 @@ public class AuditUiLogs  implements Serializable {
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		return "AuditUiLogs [id=" + id + ", logTime=" + logTime + ", log=" + log + ", level=" + level + "]";
 	}
-	
-	public static class AuditUiLogsBuilder{
-		
-		
+
+	public static class AuditUiLogsBuilder {
+
 		private AuditUiLogs auditUiLogs;
 
 		/**
@@ -218,49 +256,57 @@ public class AuditUiLogs  implements Serializable {
 		public AuditUiLogsBuilder() {
 			auditUiLogs = new AuditUiLogs();
 		}
-		
+
 		public AuditUiLogsBuilder(Long id, Timestamp logTime, String log) {
-			auditUiLogs = new AuditUiLogs(id,logTime,log);
+			auditUiLogs = new AuditUiLogs(id, logTime, log);
 		}
-		
+
 		public AuditUiLogsBuilder(Long id, Timestamp logTime, String log, Level level) {
-			auditUiLogs = new AuditUiLogs(id,logTime,log,level);
+			auditUiLogs = new AuditUiLogs(id, logTime, log, level);
 		}
-		
-		public AuditUiLogsBuilder(Long id, Timestamp logTime, String log, Level level,String appId) {
-			auditUiLogs = new AuditUiLogs(id,logTime,log,level,appId);
+
+		public AuditUiLogsBuilder(Long id, Timestamp logTime, String log, Level level, String appId) {
+			auditUiLogs = new AuditUiLogs(id, logTime, log, level, appId);
 		}
-		
+
+		public AuditUiLogsBuilder(Long id, Timestamp logTime, String log, Level level, String appId, Date logDate) {
+			auditUiLogs = new AuditUiLogs(id, logTime, logDate, log, level, appId);
+		}
+
 		public AuditUiLogsBuilder withId(Long id) {
 			auditUiLogs.setId(id);
 			return this;
-		} 
-		
+		}
+
 		public AuditUiLogsBuilder withLog(String log) {
 			auditUiLogs.setLog(log);
 			return this;
 		}
-		
+
 		public AuditUiLogsBuilder withAppId(String id) {
 			auditUiLogs.setAppId(id);
 			return this;
 		}
-		
-		public AuditUiLogs build(){
+
+		public AuditUiLogsBuilder withLogDate(java.sql.Date value) {
+			auditUiLogs.setLogDate(value);
+			return this;
+		}
+
+		public AuditUiLogs build() {
 			return this.auditUiLogs;
 		}
-		
+
 		public String buildJson() throws JsonProcessingException {
 			ObjectMapper objectMapper = new ObjectMapper();
 			return objectMapper.writeValueAsString(this.auditUiLogs);
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		try {
-			System.out
-					.println(new AuditUiLogsBuilder(new Long(1l), new Timestamp(System.currentTimeMillis()), "My first log",Level.INFO,SecureTokenGenerator.nextAppId("andolan"))
-							.buildJson());
+			System.out.println(new AuditUiLogsBuilder(new Long(1l), new Timestamp(System.currentTimeMillis()),
+					"My first log", Level.INFO, SecureTokenGenerator.nextAppId("andolan"),new Date(System.currentTimeMillis())).buildJson());
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

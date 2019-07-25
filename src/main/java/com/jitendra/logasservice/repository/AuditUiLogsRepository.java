@@ -1,5 +1,6 @@
 package com.jitendra.logasservice.repository;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -38,5 +39,11 @@ public interface AuditUiLogsRepository extends JpaRepository<AuditUiLogs, Long> 
 	@Query("SELECT A FROM AuditUiLogs A WHERE A.appId = :appId AND A.logTime between :startDate AND :endDate")
 	public List<AuditUiLogs> getByAppId(@Param("appId") String appId,
 			@Param("startDate") Timestamp startDate, @Param("endDate") Timestamp endDate);
-
+	
+	/*public List<AuditUiLogs> search(@Param("appId") String appId,@Param("level") Level level,
+			@Param("keyword") String keyword,@Param("fromDate") Date fromDate,@Param("fromDate") Date todate );
+	
+	public List<AuditUiLogs> search(@Param("appId") String appId,
+			@Param("keyword") String keyword,@Param("fromDate") Date fromDate,@Param("fromDate") Date todate );
+*/
 }

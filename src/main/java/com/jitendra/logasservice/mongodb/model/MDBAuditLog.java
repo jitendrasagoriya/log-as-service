@@ -31,6 +31,8 @@ public class MDBAuditLog {
 	private Level level;
 
 	private String appId;
+	
+	private java.sql.Date logDate;
 
 	/**
 	 * 
@@ -73,6 +75,26 @@ public class MDBAuditLog {
 		this.log = log;
 		this.level = level;
 		this.appId = appId;
+	}
+	
+	
+
+	/**
+	 * @param id
+	 * @param logTime
+	 * @param log
+	 * @param level
+	 * @param appId
+	 * @param logDate
+	 */
+	public MDBAuditLog(Long id, Timestamp logTime, String log, Level level, String appId, java.sql.Date logDate) {
+		super();
+		this.id = id;
+		this.logTime = logTime;
+		this.log = log;
+		this.level = level;
+		this.appId = appId;
+		this.logDate = logDate;
 	}
 
 	/**
@@ -143,6 +165,22 @@ public class MDBAuditLog {
 	 */
 	public void setAppId(String appId) {
 		this.appId = appId;
+	}
+	
+	
+
+	/**
+	 * @return the logDate
+	 */
+	public java.sql.Date getLogDate() {
+		return logDate;
+	}
+
+	/**
+	 * @param logDate the logDate to set
+	 */
+	public void setLogDate(java.sql.Date logDate) {
+		this.logDate = logDate;
 	}
 
 	/*
@@ -228,6 +266,10 @@ public class MDBAuditLog {
 		public MDBAuditLogsBuilder(Long id, Timestamp logTime, String log, Level level, String appId) {
 			auditUiLogs = new MDBAuditLog(id, logTime, log, level, appId);
 		}
+		
+		public MDBAuditLogsBuilder(Long id, Timestamp logTime, String log, Level level, String appId,java.sql.Date logDate) {
+			auditUiLogs = new MDBAuditLog(id, logTime, log, level, appId,logDate);
+		}
 
 		public MDBAuditLogsBuilder withId(Long id) {
 			auditUiLogs.setId(id);
@@ -241,6 +283,11 @@ public class MDBAuditLog {
 
 		public MDBAuditLogsBuilder withAppId(String id) {
 			auditUiLogs.setAppId(id);
+			return this;
+		}
+		
+		public MDBAuditLogsBuilder withLogDate(java.sql.Date id) {
+			auditUiLogs.setLogDate(id);
 			return this;
 		}
 

@@ -35,6 +35,8 @@ public class ESAuditUiLog implements Serializable {
 	private Level level;
 	
 	private String appId;
+	
+	private java.sql.Date logDate;
 
 	/**
 	 * 
@@ -79,6 +81,26 @@ public class ESAuditUiLog implements Serializable {
 		this.log = log;
 		this.level = level;
 		this.appId = appId;
+	}
+	
+	
+
+	/**
+	 * @param id
+	 * @param logTime
+	 * @param log
+	 * @param level
+	 * @param appId
+	 * @param logDate
+	 */
+	public ESAuditUiLog(Long id, Timestamp logTime, String log, Level level, String appId, java.sql.Date logDate) {
+		super();
+		this.id = id;
+		this.logTime = logTime;
+		this.log = log;
+		this.level = level;
+		this.appId = appId;
+		this.logDate = logDate;
 	}
 
 	/**
@@ -150,6 +172,22 @@ public class ESAuditUiLog implements Serializable {
 	 */
 	public void setAppId(String appId) {
 		this.appId = appId;
+	}
+	
+	
+
+	/**
+	 * @return the logDate
+	 */
+	public java.sql.Date getLogDate() {
+		return logDate;
+	}
+
+	/**
+	 * @param logDate the logDate to set
+	 */
+	public void setLogDate(java.sql.Date logDate) {
+		this.logDate = logDate;
 	}
 
 	/* (non-Javadoc)
@@ -231,6 +269,10 @@ public class ESAuditUiLog implements Serializable {
 			auditUiLogs = new ESAuditUiLog(id,logTime,log,level,appId);
 		}
 		
+		public ESAuditUiLogsBuilder(Long id, Timestamp logTime, String log, Level level,String appId,java.sql.Date logDate) {
+			auditUiLogs = new ESAuditUiLog(id,logTime,log,level,appId,logDate);
+		}
+		
 		public ESAuditUiLogsBuilder withId(Long id) {
 			auditUiLogs.setId(id);
 			return this;
@@ -243,6 +285,11 @@ public class ESAuditUiLog implements Serializable {
 		
 		public ESAuditUiLogsBuilder withAppId(String id) {
 			auditUiLogs.setAppId(id);
+			return this;
+		}
+		
+		public ESAuditUiLogsBuilder withLogDate(java.sql.Date value) {
+			auditUiLogs.setLogDate(value);;
 			return this;
 		}
 		
@@ -274,7 +321,7 @@ public class ESAuditUiLog implements Serializable {
 	public static void main(String[] args) {
 		try {
 			System.out
-					.println(new ESAuditUiLogsBuilder(new Long(1l), new Timestamp(System.currentTimeMillis()), "My first log",Level.INFO,SecureTokenGenerator.nextAppId("andolan"))
+					.println(new ESAuditUiLogsBuilder(new Long(1l), new Timestamp(System.currentTimeMillis()), "My first log",Level.INFO,SecureTokenGenerator.nextAppId("andolan"),new java.sql.Date(System.currentTimeMillis()))
 							.buildJson());
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block

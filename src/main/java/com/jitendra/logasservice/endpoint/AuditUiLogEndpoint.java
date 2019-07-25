@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +18,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jitendra.logasservice.enums.Level;
 import com.jitendra.logasservice.model.Application;
 import com.jitendra.logasservice.model.AuditUiLogs;
+import com.jitendra.logasservice.model.LogLevelCount;
 import com.jitendra.logasservice.service.impl.ApplicationServiceImpl;
 import com.jitendra.logasservice.service.impl.AuditUiLogsServiceImpl;
 import com.jitendra.logasservice.utils.DateUtility;
@@ -60,7 +63,11 @@ public class AuditUiLogEndpoint {
 		try {
 			Application application = applicationService.getUserByToken(token);
 			logs.setAppId(application.getId());
-			logs.setLogTime(new Timestamp(System.currentTimeMillis()));
+			if (logs.getLogTime() == null)
+				logs.setLogTime(new Timestamp(System.currentTimeMillis()));
+			if (logs.getLogDate() == null)
+				logs.setLogDate(new java.sql.Date(System.currentTimeMillis()));
+
 			return new ResponseEntity<AuditUiLogs>(service.repository().save(logs), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -114,6 +121,55 @@ public class AuditUiLogEndpoint {
 		return new ResponseEntity<Integer>(
 				service.getTodayAuditLogTotalCount(application.getId(), new Timestamp(yesterDay.getTime())),
 				HttpStatus.OK);
+	}
+
+	@GetMapping(path = "stat/{past}")
+	public ResponseEntity<?> getLastNDayStatus(@RequestHeader("X-AUTH-LOG-HEADER") String token,
+			@PathVariable("past") int count) {
+		Application application = applicationService.getUserByToken(token);
+		return new ResponseEntity<List<LogLevelCount>>(service.getLastNDayLog(application.getId(), count),
+				HttpStatus.OK);
+
+	}
+	
+	@GetMapping(path = "updatedate")
+	public ResponseEntity<?> updateDate(@RequestHeader("X-AUTH-LOG-HEADER") String token ) { 
+		service.updateDate();
+		return new ResponseEntity<Boolean>(Boolean.TRUE,
+				HttpStatus.OK);
+
+	}
+	
+	@GetMapping(path = "search")
+	public ResponseEntity<?> search(@RequestHeader("X-AUTH-LOG-HEADER") String token,
+			@RequestParam(name = "level") String level,
+			@RequestParam(name = "keyword") String keyword,
+			@RequestParam(name = "fromDate") String fromDate,
+			@RequestParam(name = "toDate") String toDate) { 
+		
+		Application application = applicationService.getUserByToken(token);
+		
+		Level level2 = null;
+		String searchKeyword = null;
+		java.sql.Date searchToDate = null;
+		java.sql.Date searchFromDate = null;
+		if(!StringUtils.isEmpty(level)) {
+			level2 = Level.getByValue(level);
+		}		
+		if(!StringUtils.isEmpty(keyword)) {
+			searchKeyword = keyword;
+		}
+		if(!StringUtils.isEmpty(fromDate)) {
+			searchFromDate = new java.sql.Date( DateUtility.convertToDate("yyyy-MM-dd", fromDate).getTime());
+		}
+		if(!StringUtils.isEmpty(toDate)) {
+			searchToDate = new java.sql.Date( DateUtility.convertToDate("yyyy-MM-dd", toDate).getTime());
+		}
+		List<AuditUiLogs> auditUiLogs =  service.search(application.getId(), level2 , searchKeyword, searchToDate, searchFromDate);
+		
+		return new ResponseEntity<List<AuditUiLogs>>(auditUiLogs,
+				HttpStatus.OK);
+
 	}
 
 }
