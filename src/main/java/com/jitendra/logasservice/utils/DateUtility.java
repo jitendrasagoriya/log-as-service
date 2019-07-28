@@ -32,7 +32,6 @@ public class DateUtility {
 		Date date = new Date(timestamp.getTime());
 		date.setHours(0);
 		date.setMinutes(0);
-
 		return new Timestamp(date.getTime());
 	}
 

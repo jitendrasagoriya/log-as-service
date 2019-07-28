@@ -4,10 +4,13 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
+import com.jitendra.logasservice.model.Result;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -145,7 +148,8 @@ public class AuditUiLogEndpoint {
 			@RequestParam(name = "level") String level,
 			@RequestParam(name = "keyword") String keyword,
 			@RequestParam(name = "fromDate") String fromDate,
-			@RequestParam(name = "toDate") String toDate) { 
+			@RequestParam(name = "toDate") String toDate,
+			Pageable Pageable) {
 		
 		Application application = applicationService.getUserByToken(token);
 		
@@ -165,9 +169,9 @@ public class AuditUiLogEndpoint {
 		if(!StringUtils.isEmpty(toDate)) {
 			searchToDate = new java.sql.Date( DateUtility.convertToDate("yyyy-MM-dd", toDate).getTime());
 		}
-		List<AuditUiLogs> auditUiLogs =  service.search(application.getId(), level2 , searchKeyword, searchToDate, searchFromDate);
+        Result<AuditUiLogs> auditUiLogs =  service.search(application.getId(), level2 , searchKeyword, searchToDate, searchFromDate,Pageable);
 		
-		return new ResponseEntity<List<AuditUiLogs>>(auditUiLogs,
+		return new ResponseEntity<Result<AuditUiLogs>>(auditUiLogs,
 				HttpStatus.OK);
 
 	}

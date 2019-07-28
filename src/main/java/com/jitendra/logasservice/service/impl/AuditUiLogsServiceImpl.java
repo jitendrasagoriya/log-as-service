@@ -14,8 +14,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import com.jitendra.logasservice.model.Result;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.jitendra.logasservice.enums.Level;
@@ -150,8 +152,8 @@ public class AuditUiLogsServiceImpl implements AuditUiLogsService<AuditUiLogsRep
 
 	@Override
 	public void updateDate() {
-		List<AuditUiLogs> auditUiLogs = repository.findAll();
-		for (AuditUiLogs auditUiLog : auditUiLogs) {
+		Iterable<AuditUiLogs> iterable = repository.findAll();
+		for (AuditUiLogs auditUiLog : iterable) {
 			auditUiLog.setLogDate(auditUiLog.getLogTime() != null ? new Date(auditUiLog.getLogTime().getTime()) : null);
 			System.out.println(auditUiLog);
 			repository.save(auditUiLog);
@@ -166,8 +168,6 @@ public class AuditUiLogsServiceImpl implements AuditUiLogsService<AuditUiLogsRep
 		CriteriaQuery<AuditUiLogs> cq = cb.createQuery(AuditUiLogs.class);
 
 		Root<AuditUiLogs> auditUiLog = cq.from(AuditUiLogs.class);
-
-		
 		
 		List<Object> filterPredicates = new ArrayList<>();
 		
@@ -183,6 +183,69 @@ public class AuditUiLogsServiceImpl implements AuditUiLogsService<AuditUiLogsRep
 		
 		TypedQuery<AuditUiLogs> query = em.createQuery(cq);
 		return query.getResultList();
+	}
+
+
+	@Override
+	public Result<AuditUiLogs> search(String appId, Level level, String keyword, Date toDate, Date fromDate, Pageable pageable) {
+        Long totalCount = 0L;
+        Result<AuditUiLogs> result = new Result<>();
+        try{
+            totalCount = countSearch( appId, level, keyword, toDate, fromDate);
+            result.setTotalCount(totalCount);
+        }catch (Exception e){}
+
+        try{
+            result.setFirstPage(1);
+            long totalPage = totalCount / pageable.getPageSize();
+            if( (totalCount%pageable.getPageSize()) != 0) {
+                totalPage++;
+            }
+			result.setCurrentPageNumber(pageable.getPageNumber());
+            result.setPageCount(totalPage);
+            result.setLastPage(totalPage);
+        }catch (Exception e){}
+
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<AuditUiLogs> cq = cb.createQuery(AuditUiLogs.class);
+		Root<AuditUiLogs> auditUiLog = cq.from(AuditUiLogs.class);
+		List<Object> filterPredicates = new ArrayList<>();
+		filterPredicates.add(cb.equal(auditUiLog.get("appId"), appId));
+		if (level != null)
+			filterPredicates.add( cb.equal(auditUiLog.get("level"), level) );
+		if (!StringUtils.isEmpty(keyword))
+			filterPredicates.add(cb.like(auditUiLog.get("log"), "%" + keyword + "%"));
+		if (toDate != null && fromDate != null)
+			filterPredicates.add(cb.between(auditUiLog.get("logDate"), fromDate, toDate));
+
+		cq.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
+
+		TypedQuery<AuditUiLogs> query = em.createQuery(cq);
+		query.setFirstResult( (pageable.getPageNumber()-1) * pageable.getPageSize() );
+		query.setMaxResults( pageable.getPageSize() );
+        result.setList(query.getResultList());
+		return result;
+	}
+
+    @Override
+	public Long countSearch(String appId, Level level, String keyword, Date toDate, Date fromDate) {
+        final CriteriaBuilder builder=em.getCriteriaBuilder();
+        final CriteriaQuery<Long> countCriteria=builder.createQuery(Long.class);
+        Root<AuditUiLogs> auditUiLog = countCriteria.from(AuditUiLogs.class);
+        List<Object> filterPredicates = new ArrayList<>();
+
+        filterPredicates.add(builder.equal(auditUiLog.get("appId"), appId));
+        if (level != null)
+            filterPredicates.add( builder.equal(auditUiLog.get("level"), level) );
+        if (!StringUtils.isEmpty(keyword))
+            filterPredicates.add(builder.like(auditUiLog.get("log"), "%" + keyword + "%"));
+        if (toDate != null && fromDate != null)
+            filterPredicates.add(builder.between(auditUiLog.get("logDate"), fromDate, toDate));
+
+        countCriteria.select(builder.count(auditUiLog));
+        countCriteria.where(builder.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
+        countCriteria.distinct(countCriteria.isDistinct());
+        return em.createQuery(countCriteria).getSingleResult();
 	}
 
 }

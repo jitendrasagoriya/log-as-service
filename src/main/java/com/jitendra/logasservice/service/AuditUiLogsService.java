@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
+import com.jitendra.logasservice.model.Result;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.jitendra.logasservice.enums.Level;
@@ -41,6 +43,9 @@ public interface AuditUiLogsService<R> extends BaseSerivce<R> {
 	public List<LogLevelCount> getLastNDayLog(String appId,int days);
 	
 	public List<AuditUiLogs> search(String appId, Level level,String keyword,Date toDate,Date fromDate);
-	
+
+	public Result<AuditUiLogs> search(String appId, Level level, String keyword, Date toDate, Date fromDate, Pageable pageable);
+
+    Long countSearch(String appId, Level level, String keyword, Date toDate, Date fromDate);
 	public void updateDate();
 }

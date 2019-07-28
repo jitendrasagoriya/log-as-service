@@ -1475,3 +1475,21 @@ Caused by: java.lang.IllegalStateException: The file is locked: nio:D:/andolan/l
 	at org.h2.mvstore.FileStore.open(FileStore.java:173)
 	at org.h2.mvstore.MVStore.<init>(MVStore.java:350)
 	... 86 more
+2019-07-27 10:12:53 jdbc[24]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "SELECT * FROM AUDITLOG  WHERE APPID = 'TE9HQVNTRVJWSUNF-FSZVIRT54B1562438203721' ORDER BY LOGDATE
+
+
+UPDATE[*] AUDITLOG  SET LOGTIME = LOGTIME -1 WHERE LOGDATE = '2019-07-25' "; SQL statement:
+SELECT * FROM AUDITLOG  where appid = 'TE9HQVNTRVJWSUNF-FSZVIRT54B1562438203721' order by logdate
+
+
+UPDATE AUDITLOG  SET LOGTIME = LOGTIME -1 WHERE LOGDATE = '2019-07-25' [42000-197]
+2019-07-27 10:13:13 jdbc[24]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "SELECT * FROM AUDITLOG  WHERE APPID = 'TE9HQVNTRVJWSUNF-FSZVIRT54B1562438203721' ORDER BY LOGDATE
+
+
+UPDATE[*] AUDITLOG  SET LOGTIME = LOGTIME -1 WHERE LOGDATE = '2019-07-25' "; SQL statement:
+SELECT * FROM AUDITLOG  where appid = 'TE9HQVNTRVJWSUNF-FSZVIRT54B1562438203721' order by logdate
+
+
+UPDATE AUDITLOG  SET LOGTIME = LOGTIME -1 WHERE LOGDATE = '2019-07-25' [42000-197]
