@@ -44,11 +44,12 @@ public class AuthenticatorInterceptor extends HandlerInterceptorAdapter {
 		if (request.getMethod().equalsIgnoreCase("OPTIONS")) {
 			return true;
 		}
-
+ 		if ( request.getRequestURI().contains("api/admin/")) {
+			return true;
+		}
 		if (request.getMethod().equalsIgnoreCase("POST") && request.getRequestURI().contains("api/authentication/")) {
 			return true;
 		}
-		
 		if (request.getMethod().equalsIgnoreCase("GET") && request.getRequestURI().contains("api/authentication/")) {
 			return true;
 		}

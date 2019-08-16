@@ -19,6 +19,8 @@ import com.jitendra.logasservice.service.impl.ApplicationServiceImpl;
 import com.jitendra.logasservice.token.Base64BasicEncryption;
 import com.jitendra.logasservice.token.SecureTokenGenerator;
 
+import java.util.List;
+
 @CrossOrigin(maxAge = 3600)
 @RestController
 @RequestMapping(path = "api/authentication/", produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -46,6 +48,8 @@ public class ApplicationEndpoint {
 			return new ResponseEntity<Exception>(e, HttpStatus.EXPECTATION_FAILED);
 		}
 	}
+
+
 
 	@GetMapping()
 	public ResponseEntity<?> getApplication(@RequestParam(name = "email") String email,

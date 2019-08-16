@@ -9,10 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 
 import com.jitendra.logasservice.model.Result;
 import org.apache.commons.lang3.StringUtils;
@@ -219,6 +216,7 @@ public class AuditUiLogsServiceImpl implements AuditUiLogsService<AuditUiLogsRep
 			filterPredicates.add(cb.between(auditUiLog.get("logDate"), fromDate, toDate));
 
 		cq.where(cb.and((Predicate[]) filterPredicates.toArray(new Predicate[0])));
+		cq.orderBy( cb.desc( auditUiLog.get("logTime")));
 
 		TypedQuery<AuditUiLogs> query = em.createQuery(cq);
 		query.setFirstResult( (pageable.getPageNumber()-1) * pageable.getPageSize() );
